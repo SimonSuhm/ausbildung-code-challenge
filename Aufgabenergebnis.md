@@ -35,3 +35,4 @@ Um das Projekt lokal auszuführen, müssen folgende Schritte ausgeführt werden:
 ## Anmerkungen
 
 - Projekt wurde für Firefox optimiert
+- Die Datei "Simon_Suhm_Bewerbung_HTML.html" ist mein Bewerbungsanschreiben und Lebenslauf in der Optik einer PDF-Datei als HTML-Code. Ich habe diese Datei vor meiner Bewerbung erstellt um Initiative zu zeigen, doch konnte sie leider per Mail nicht bereitstellen.
