@@ -6,17 +6,17 @@
     <title>UDG Probeaufgabe - Simon Suhm</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body class="page">
+  <body>
     <div class="header">
       <div class="buttons">
         <h1 id="Headline">Ausbildungs Code Challenge</h1>
         <div id="csv-container">
           <input id="csv" type="file" accept=".csv" />
         </div>
-
         <button id="export" onclick="exportCSV()">Datei exportieren</button>
       </div>
-      <div class="canvases">
+      <div class="canvas-container">
+        <!-- Graphen zur Geschlechterverteilung und Produktverteilung-->
         <canvas id="gendersChart" width="300px" height="300px"></canvas>
         <canvas id="ProductsChart" width="300px" height="300px"></canvas>
       </div>
@@ -28,14 +28,16 @@
       Neue Datensätze hinzufügen
     </button>
   </body>
+
+  <!-- JavaScript Importieren -->
   <script src="script.js"></script>
+
   <!-- Chart.js Importieren -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-
   <!-- Chart.js Basis Konfiguration -->
   <script>
+    // Konfiguration erster Graph
     const genderArray = [1, 1, 1, 1];
     const ctx1 = document.getElementById("gendersChart").getContext("2d");
     const gendersChart = new Chart(ctx1, {
@@ -59,14 +61,6 @@
         ],
       },
       options: {
-        scales: {
-          x: {
-            display: false,
-          },
-          y: {
-            display: false,
-          },
-        },
         plugins: {
           tooltip: {
             callbacks: {
@@ -99,19 +93,12 @@
           legend: {
             display: false,
           },
-          grid: {
-            display: false,
-          },
         },
         responsive: false,
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
       },
     });
 
+    // Konfiguration zweiter Graph
     const productArray = [
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
       1, 1, 1, 1, 1, 1, 1, 1,
@@ -234,11 +221,6 @@
           },
         },
         responsive: false,
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
       },
     });
   </script>

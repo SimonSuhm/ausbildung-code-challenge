@@ -1,1 +1,0 @@
-# ausbildung-code-challenge
