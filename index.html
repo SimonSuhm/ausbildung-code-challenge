@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UDG Probeaufgabe - Simon Suhm</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="page">
+    <div class="header">
+      <div class="buttons">
+        <h1 id="Headline">Ausbildungs Code Challenge</h1>
+        <div id="csv-container">
+          <input id="csv" type="file" accept=".csv" />
+        </div>
+
+        <button id="export" onclick="exportCSV()">Datei exportieren</button>
+      </div>
+      <div class="canvases">
+        <canvas id="gendersChart" width="300px" height="300px"></canvas>
+        <canvas id="ProductsChart" width="300px" height="300px"></canvas>
+      </div>
+    </div>
+
+    <div class="Tabelle-Container"><table id="Tabelle"></table></div>
+
+    <button id="additional" onclick="addEmptyRow()">
+      Neue Datensätze hinzufügen
+    </button>
+  </body>
+  <script src="script.js"></script>
+  <!-- Chart.js Importieren -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+  <!-- Chart.js Basis Konfiguration -->
+  <script>
+    const genderArray = [1, 1, 1, 1];
+    const ctx1 = document.getElementById("gendersChart").getContext("2d");
+    const gendersChart = new Chart(ctx1, {
+      type: "pie",
+      data: {
+        labels: ["Herren", "Damen", "Kinder", "Babies"],
+        datasets: [
+          {
+            label: "Geschlechterverteilung",
+            data: genderArray,
+            backgroundColor: [
+              "rgba(54, 162, 235, 1)",
+              "rgba(255, 99, 132, 1)",
+              "rgba(75, 192, 192, 1)",
+              "rgba(255, 206, 86, 1)",
+            ],
+
+            borderColor: "rgba(255, 99, 132, 1)",
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          x: {
+            display: false,
+          },
+          y: {
+            display: false,
+          },
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (tooltipItem) {
+                // Holt sich die gesamte Datensatzreihe (Array der Werte des Datasets)
+                let dataset = tooltipItem.dataset.data;
+
+                // Berechnet die Gesamtsumme der Werte im Dataset (also die Summe aller Segmente im Diagramm)
+                let total = dataset.reduce((acc, val) => acc + val, 0);
+
+                // Holt sich den Wert des aktuellen Segments (der Wert des gehoverten Segments)
+                let value = tooltipItem.raw;
+
+                // Berechnet den Prozentsatz des aktuellen Werts im Verhältnis zur Gesamtsumme
+                let percentage = ((value / total) * 100).toFixed(1) + "%"; // Umwandlung in Prozent und auf 1 Dezimalstelle gerundet
+
+                // Gibt nur den Prozentsatz zurück, der im Tooltip angezeigt wird
+                return percentage; // Zeigt den Prozentsatz im Tooltip an
+              },
+            },
+          },
+          title: {
+            display: true,
+            text: "Geschlechterverteilung",
+            color: "#00DBB7",
+            font: {
+              size: 20,
+            },
+          },
+          legend: {
+            display: false,
+          },
+          grid: {
+            display: false,
+          },
+        },
+        responsive: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+
+    const productArray = [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1,
+    ];
+    const ctx2 = document.getElementById("ProductsChart").getContext("2d");
+    const productsChart = new Chart(ctx2, {
+      type: "pie",
+      data: {
+        labels: [
+          "T-Shirts",
+          "Poloshirts",
+          "Taschen",
+          "Caps",
+          "Pullover",
+          "Sweatjacken",
+          "Bademäntel",
+          "Handtücher",
+          "Mützen",
+          "Hüte",
+          "Schals",
+          "Handschuhe",
+          "Arbeitshosen",
+          "Krawatten",
+          "Schuhe",
+          "Shorts",
+          "Jacken",
+          "Westen",
+          "Decken",
+          "Schürzen",
+          "Hemden",
+          "Blusen",
+          "Lätzchen",
+          "Unterwäsche",
+          "Jogginghosen",
+          "Blazer",
+          "Freizeithose",
+          "Hosen",
+          "Bodies & Schlafanzüge",
+          "Koch-Jacken",
+          "Schirme",
+          "Kittel & Kasacks",
+          "Teddybären",
+        ],
+        datasets: [
+          {
+            label: "Produktverteilung",
+            data: productArray,
+            backgroundColor: [
+              "rgba(54, 162, 235, 1)", // Original Blue
+              "rgba(30, 144, 255, 1)", // Dodger Blue
+              "rgba(0, 191, 255, 1)", // Deep Sky Blue
+              "rgba(70, 130, 180, 1)", // Steel Blue
+              "rgba(100, 149, 237, 1)", // Cornflower Blue
+              "rgba(135, 206, 250, 1)", // Light Sky Blue
+              "rgba(176, 196, 222, 1)", // Light Steel Blue
+              "rgba(25, 25, 112, 1)", // Midnight Blue
+              "rgba(255, 99, 132, 1)", // Original Red
+              "rgba(220, 20, 60, 1)", // Crimson
+              "rgba(255, 69, 0, 1)", // Red-Orange
+              "rgba(233, 150, 122, 1)", // Dark Salmon
+              "rgba(255, 140, 0, 1)", // Dark Orange
+              "rgba(205, 92, 92, 1)", // Indian Red
+              "rgba(178, 34, 34, 1)", // Firebrick
+              "rgba(139, 0, 0, 1)", // Dark Red
+              "rgba(75, 192, 192, 1)", // Original Green
+              "rgba(60, 179, 113, 1)", // Medium Sea Green
+              "rgba(144, 238, 144, 1)", // Light Green
+              "rgba(0, 255, 127, 1)", // Spring Green
+              "rgba(50, 205, 50, 1)", // Lime Green
+              "rgba(34, 139, 34, 1)", // Forest Green
+              "rgba(0, 128, 128, 1)", // Teal
+              "rgba(32, 178, 170, 1)", // Light Sea Green
+              "rgba(255, 206, 86, 1)", // Original Yellow
+              "rgba(255, 215, 0, 1)", // Gold
+              "rgba(255, 165, 0, 1)", // Orange
+              "rgba(255, 223, 186, 1)", // Peach
+              "rgba(218, 165, 32, 1)", // Goldenrod
+              "rgba(240, 230, 140, 1)", // Khaki
+              "rgba(255, 250, 205, 1)", // Lemon Chiffon
+              "rgba(189, 183, 107, 1)", // Dark Khaki
+              "rgba(255, 228, 181, 1)", // Moccasin (a soft, warm yellow-orange)
+            ],
+            borderColor: "rgba(255, 99, 132, 1)",
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (tooltipItem) {
+                // Holt sich die gesamte Datensatzreihe (Array der Werte des Datasets)
+                let dataset = tooltipItem.dataset.data;
+
+                // Berechnet die Gesamtsumme der Werte im Dataset (also die Summe aller Segmente im Diagramm)
+                let total = dataset.reduce((acc, val) => acc + val, 0);
+
+                // Holt sich den Wert des aktuellen Segments (der Wert des gehoverten Segments)
+                let value = tooltipItem.raw;
+
+                // Berechnet den Prozentsatz des aktuellen Werts im Verhältnis zur Gesamtsumme
+                let percentage = ((value / total) * 100).toFixed(1) + "%"; // Umwandlung in Prozent und auf 1 Dezimalstelle gerundet
+
+                // Gibt nur den Prozentsatz zurück, der im Tooltip angezeigt wird
+                return percentage; // Zeigt den Prozentsatz im Tooltip an
+              },
+            },
+          },
+          title: {
+            display: true,
+            text: "Produktverteilung",
+            color: "#00DBB7",
+            font: {
+              size: 20,
+            },
+          },
+          legend: {
+            display: false,
+          },
+        },
+        responsive: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+  </script>
+</html>
