@@ -1,9 +1,11 @@
+//Inizialer CSV-Array
 let csv = [];
 
 document.getElementById("csv").addEventListener("change", function (event) {
   const file = event.target.files[0];
   if (!file) return;
 
+  //Lese von CSV-Datei und uhnterteile in Array mit Subarrays
   const reader = new FileReader();
   reader.onload = function (e) {
     const rows = e.target.result
@@ -18,6 +20,7 @@ document.getElementById("csv").addEventListener("change", function (event) {
   reader.readAsText(file);
 });
 
+//Funktion um die Tabelle zu erstellen
 function displayTable() {
   const table = document.getElementById("Tabelle");
   table.innerHTML = "";
@@ -35,6 +38,7 @@ function displayTable() {
   });
 }
 
+//Funktion um eine leere Zeile hinzuzufügen
 function addEmptyRow() {
   const newRow = [
     "",
@@ -76,6 +80,7 @@ function updateGendersChart() {
   gendersChart.update();
 }
 
+//Durchsucht CSV nach den Produkten und zählt sie
 function updateProductsChart() {
   let array = csv;
   let targetWords = [

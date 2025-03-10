@@ -55,7 +55,7 @@ body {
   cursor: progress;
 }
 
-#export.hover {
+#export:hover {
   background-color: rgb(1, 167, 139);
   color: rgb(255, 255, 255);
 }
